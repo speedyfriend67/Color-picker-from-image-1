@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Color Extractor</title>
-    <!-- Include ColorThief library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.0/color-thief.umd.js"></script>
     <style>
         body {
@@ -32,7 +31,6 @@
             max-width: 100%;
             border-radius: 8px;
             box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
-            margin-bottom: 10px; /* Added margin for better spacing */
         }
 
         #colorList {
@@ -44,11 +42,10 @@
         #colorList li {
             margin-bottom: 10px;
             font-size: 16px;
-            display: flex;
-            align-items: center;
         }
 
         .colorSample {
+            display: inline-block;
             width: 20px;
             height: 20px;
             margin-right: 10px;
@@ -86,12 +83,9 @@
 
                         const colorThief = new ColorThief();
                         const dominantColor = colorThief.getColor(image);
-                        const palette = colorThief.getColorPalette(image, 30); // Change the number of colors here
+                        const palette = colorThief.getPalette(image, 30); 
 
-                        // Sort colors based on similarity
-                        const sortedPalette = sortColorsBySimilarity(dominantColor, palette);
-
-                        displayColors(dominantColor, sortedPalette);
+                        displayColors(dominantColor, palette);
                     };
                 };
 
@@ -112,24 +106,16 @@
 
         function addColorToList(label, color, list) {
             const listItem = document.createElement('li');
-            const colorSample = document.createElement('div');
+            const colorSample = document.createElement('span');
             colorSample.className = 'colorSample';
             colorSample.style.backgroundColor = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
             listItem.appendChild(colorSample);
-            const colorText = document.createElement('span');
-            colorText.innerHTML = `<strong>${label}:</strong> ${rgbToHex(color)}`;
-            listItem.appendChild(colorText);
+            listItem.innerHTML += `<strong>${label}:</strong> ${rgbToHex(color)}`;
             list.appendChild(listItem);
         }
 
         function rgbToHex(rgb) {
             return `#${(1 << 24 | rgb[0] << 16 | rgb[1] << 8 | rgb[2]).toString(16).slice(1)}`;
-        }
-
-        function sortColorsBySimilarity(dominantColor, palette) {
-            const colorThief = new ColorThief();
-            const sortFunction = colorThief.getSortFunction(dominantColor);
-            return palette.sort(sortFunction);
         }
     </script>
 </body>

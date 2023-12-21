@@ -84,9 +84,12 @@
 
                         const colorThief = new ColorThief();
                         const dominantColor = colorThief.getColor(image);
-                        const palette = colorThief.getPalette(image, 30); // Change the number of colors here
+                        const palette = colorThief.getColorPalette(image, 30); // Change the number of colors here
 
-                        displayColors(dominantColor, palette);
+                        // Sort colors based on similarity
+                        const sortedPalette = sortColorsBySimilarity(dominantColor, palette);
+
+                        displayColors(dominantColor, sortedPalette);
                     };
                 };
 
@@ -117,6 +120,14 @@
 
         function rgbToHex(rgb) {
             return `#${(1 << 24 | rgb[0] << 16 | rgb[1] << 8 | rgb[2]).toString(16).slice(1)}`;
+        }
+
+        function sortColorsBySimilarity(dominantColor, palette) {
+            // Use the ColorThief's getSortFunction method to get a function for sorting colors by similarity
+            const sortFunction = colorThief.getSortFunction(dominantColor);
+
+            // Sort the palette array using the obtained sort function
+            return palette.sort(sortFunction);
         }
     </script>
 </body>

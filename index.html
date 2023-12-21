@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Color Extractor</title>
-    <!-- Include ColorThief library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.0/color-thief.umd.js"></script>
     <style>
         body {
@@ -129,7 +128,6 @@
                         const dominantColor = colorThief.getColor(image);
                         const palette = colorThief.getPalette(image, 30);
 
-                        // Sort colors based on similarity
                         const sortedPalette = sortColorsBySimilarity(dominantColor, palette);
 
                         displayColors(dominantColor, sortedPalette);

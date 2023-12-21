@@ -6,14 +6,67 @@
     <title>Color Extractor</title>
     <!-- Include ColorThief library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.0/color-thief.umd.js"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+        }
+
+        #app-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #imageContainer {
+            margin-bottom: 20px;
+        }
+
+        #imageContainer img {
+            max-width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+        }
+
+        #colorList {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        #colorList li {
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .colorSample {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            border-radius: 4px;
+        }
+    </style>
 </head>
 <body>
-    <input type="file" id="imageInput" accept="image/*" onchange="processImage()">
-    <ul id="colorList"></ul>
+    <div id="app-container">
+        <input type="file" id="imageInput" accept="image/*" onchange="processImage()">
+        
+        <div id="imageContainer"></div>
+        
+        <ul id="colorList"></ul>
+    </div>
 
     <script>
         function processImage() {
             const input = document.getElementById('imageInput');
+            const imageContainer = document.getElementById('imageContainer');
             const colorList = document.getElementById('colorList');
             
             if (input.files && input.files[0]) {
@@ -24,6 +77,11 @@
                     image.src = e.target.result;
 
                     image.onload = function () {
+                        imageContainer.innerHTML = '';
+                        const imgElement = document.createElement('img');
+                        imgElement.src = e.target.result;
+                        imageContainer.appendChild(imgElement);
+
                         const colorThief = new ColorThief();
                         const dominantColor = colorThief.getColor(image);
                         const palette = colorThief.getPalette(image, 10); // Change the number of colors here
@@ -40,17 +98,20 @@
             const colorList = document.getElementById('colorList');
             colorList.innerHTML = '';
 
-            addColorToList('Dominant Color', rgbToHex(dominantColor), colorList);
+            addColorToList('Dominant Color', dominantColor, colorList);
 
             palette.forEach((color, index) => {
-                addColorToList(`Color ${index + 1}`, rgbToHex(color), colorList);
+                addColorToList(`Color ${index + 1}`, color, colorList);
             });
         }
 
         function addColorToList(label, color, list) {
             const listItem = document.createElement('li');
-            listItem.textContent = `${label}: ${color}`;
-            listItem.style.color = color;
+            const colorSample = document.createElement('span');
+            colorSample.className = 'colorSample';
+            colorSample.style.backgroundColor = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+            listItem.appendChild(colorSample);
+            listItem.innerHTML += `<strong>${label}:</strong> ${rgbToHex(color)}`;
             list.appendChild(listItem);
         }
 

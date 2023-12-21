@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Color Extractor</title>
+    <!-- Include ColorThief library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.0/color-thief.umd.js"></script>
     <style>
         body {
@@ -126,11 +127,9 @@
                     image.onload = function () {
                         const colorThief = new ColorThief();
                         const dominantColor = colorThief.getColor(image);
-                        const palette = colorThief.getPalette(image, 30);
+                        const palette = colorThief.getPalette(image, 30); // Change the number of colors here
 
-                        const sortedPalette = sortColorsBySimilarity(dominantColor, palette);
-
-                        displayColors(dominantColor, sortedPalette);
+                        displayColors(dominantColor, palette);
                     };
                 };
 
@@ -166,15 +165,10 @@
             imageContainer.innerHTML = '';
             colorList.innerHTML = '';
         }
-            function rgbToHex(rgb) {
-        return `#${(1 << 24 | rgb[0] << 16 | rgb[1] << 8 | rgb[2]).toString(16).slice(1)}`;
-    }
 
-    function sortColorsBySimilarity(dominantColor, palette) {
-        const colorThief = new ColorThief();
-        const sortFunction = colorThief.getSortFunction(dominantColor);
-        return palette.sort(sortFunction);
-    }
-</script>
+        function rgbToHex(rgb) {
+            return `#${(1 << 24 | rgb[0] << 16 | rgb[1] << 8 | rgb[2]).toString(16).slice(1)}`;
+        }
+    </script>
 </body>
 </html>

@@ -43,10 +43,11 @@
         #colorList li {
             margin-bottom: 10px;
             font-size: 16px;
+            display: flex;
+            align-items: center;
         }
 
         .colorSample {
-            display: inline-block;
             width: 20px;
             height: 20px;
             margin-right: 10px;
@@ -110,7 +111,7 @@
 
         function addColorToList(label, color, list) {
             const listItem = document.createElement('li');
-            const colorSample = document.createElement('span');
+            const colorSample = document.createElement('div');
             colorSample.className = 'colorSample';
             colorSample.style.backgroundColor = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
             listItem.appendChild(colorSample);
@@ -123,10 +124,8 @@
         }
 
         function sortColorsBySimilarity(dominantColor, palette) {
-            // Use the ColorThief's getSortFunction method to get a function for sorting colors by similarity
+            const colorThief = new ColorThief();
             const sortFunction = colorThief.getSortFunction(dominantColor);
-
-            // Sort the palette array using the obtained sort function
             return palette.sort(sortFunction);
         }
     </script>

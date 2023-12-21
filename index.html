@@ -116,7 +116,9 @@
             colorSample.className = 'colorSample';
             colorSample.style.backgroundColor = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
             listItem.appendChild(colorSample);
-            listItem.innerHTML += `<strong>${label}:</strong> ${rgbToHex(color)}`;
+            const colorText = document.createElement('span');
+            colorText.innerHTML = `<strong>${label}:</strong> ${rgbToHex(color)}`;
+            listItem.appendChild(colorText);
             list.appendChild(listItem);
         }
 

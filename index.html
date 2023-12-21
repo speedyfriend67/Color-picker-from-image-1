@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Extractor</title>
+    <!-- Include ColorThief library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.0/color-thief.umd.js"></script>
+</head>
+<body>
+    <input type="file" id="imageInput" accept="image/*" onchange="processImage()">
+    <ul id="colorList"></ul>
+
+    <script>
+        function processImage() {
+            const input = document.getElementById('imageInput');
+            const colorList = document.getElementById('colorList');
+            
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    const image = new Image();
+                    image.src = e.target.result;
+
+                    image.onload = function () {
+                        const colorThief = new ColorThief();
+                        const dominantColor = colorThief.getColor(image);
+                        const palette = colorThief.getPalette(image);
+
+                        displayColors(dominantColor, palette);
+                    };
+                };
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function displayColors(dominantColor, palette) {
+            const colorList = document.getElementById('colorList');
+            colorList.innerHTML = '';
+
+            addColorToList('Dominant Color', rgbToHex(dominantColor), colorList);
+
+            palette.forEach((color, index) => {
+                addColorToList(`Color ${index + 1}`, rgbToHex(color), colorList);
+            });
+        }
+
+        function addColorToList(label, color, list) {
+            const listItem = document.createElement('li');
+            listItem.textContent = `${label}: ${color}`;
+            listItem.style.color = color;
+            list.appendChild(listItem);
+        }
+
+        function rgbToHex(rgb) {
+            return `#${(1 << 24 | rgb[0] << 16 | rgb[1] << 8 | rgb[2]).toString(16).slice(1)}`;
+        }
+    </script>
+</body>
+</html>

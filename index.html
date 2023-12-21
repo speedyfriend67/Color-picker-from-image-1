@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Color Extractor</title>
+    <!-- Include ColorThief library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.0/color-thief.umd.js"></script>
     <style>
         body {
@@ -42,14 +43,35 @@
         #colorList li {
             margin-bottom: 10px;
             font-size: 16px;
+            display: flex;
+            align-items: center;
         }
 
         .colorSample {
-            display: inline-block;
             width: 20px;
             height: 20px;
             margin-right: 10px;
             border-radius: 4px;
+        }
+
+        #buttons {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 4px;
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        button:hover {
+            background-color: #45a049;
         }
     </style>
 </head>
@@ -60,13 +82,17 @@
         <div id="imageContainer"></div>
         
         <ul id="colorList"></ul>
+
+        <div id="buttons">
+            <button onclick="extractColors()">Extract Colors</button>
+            <button onclick="clearResults()">Clear Results</button>
+        </div>
     </div>
 
     <script>
         function processImage() {
             const input = document.getElementById('imageInput');
             const imageContainer = document.getElementById('imageContainer');
-            const colorList = document.getElementById('colorList');
             
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
@@ -80,10 +106,28 @@
                         const imgElement = document.createElement('img');
                         imgElement.src = e.target.result;
                         imageContainer.appendChild(imgElement);
+                    };
+                };
 
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function extractColors() {
+            const input = document.getElementById('imageInput');
+            const colorList = document.getElementById('colorList');
+
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    const image = new Image();
+                    image.src = e.target.result;
+
+                    image.onload = function () {
                         const colorThief = new ColorThief();
                         const dominantColor = colorThief.getColor(image);
-                        const palette = colorThief.getPalette(image, 30); 
+                        const palette = colorThief.getPalette(image, 30); // Change the number of colors here
 
                         displayColors(dominantColor, palette);
                     };
@@ -112,6 +156,14 @@
             listItem.appendChild(colorSample);
             listItem.innerHTML += `<strong>${label}:</strong> ${rgbToHex(color)}`;
             list.appendChild(listItem);
+        }
+
+        function clearResults() {
+            const imageContainer = document.getElementById('imageContainer');
+            const colorList = document.getElementById('colorList');
+
+            imageContainer.innerHTML = '';
+            colorList.innerHTML = '';
         }
 
         function rgbToHex(rgb) {
